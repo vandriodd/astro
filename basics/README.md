@@ -192,3 +192,49 @@ layout: "Layout.astro"
 Astro also supports a feature called Content Collections, which allows you to organize and manage your content more efficiently. This is an advanced feature worth exploring as you continue your Astro journey.
 
 Additionally, you can create `.html` files in the `pages` directory, and they will be treated as routes just like `.astro` and `.md` files.
+
+## Data Fetching
+
+Fetching data in Astro is straightforward. Here’s an example of how to fetch data from an external API:
+
+```astro
+---
+const res = await fetch('https://api.spacexdata.com/v5/launches');
+const data = await res.json();
+---
+```
+
+When working with fetched data in Astro, it’s important to note that the `console.log` statement won’t appear in the browser’s console. Instead, it will output in the VSCode terminal. This is because Astro does not execute JavaScript on the client by default. JavaScript execution happens either on the server-side or during the build process.
+
+### Iterating Over Data
+
+Unlike other frameworks, Astro does not require a key prop when iterating over elements. The iteration syntax may look similar, but its underlying functionality is different.
+
+## Conditional Rendering 🎭
+
+Astro offers a more declarative way to handle conditional rendering through the `class:list` directive. Instead of using a template string for conditional classes, you can use this utility to apply styles conditionally:
+
+```astro
+<span class:list={[
+  "text-xs font-semibold mr-2 px-2.5 py-0.5 rounded",
+  {
+    "bg-green-400 text-green-900": success,
+    "bg-red-400 text-red-900": !success
+  }
+]}>
+  {successText}
+</span>
+```
+
+This approach allows for a cleaner and more maintainable codebase.
+
+## 404 Pages 🚫
+
+Astro automatically handles 404 pages by generating a default 404 page if a route does not match any existing file. You can customize the 404 page by creating a `404.astro` file in the `src/pages/ directory`. This file will be served whenever a user navigates to a non-existent route.
+
+```astro
+// src/pages/404.astro
+---
+import Layout from '../layouts/Layout.astro';
+---
+```
