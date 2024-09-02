@@ -238,3 +238,90 @@ Astro automatically handles 404 pages by generating a default 404 page if a rout
 import Layout from '../layouts/Layout.astro';
 ---
 ```
+
+## Dynamic Routes 🛤️
+
+Astro allows you to create dynamic routes using a specific file naming convention:
+
+File Naming Convention: Use square brackets [] in the file name to denote a dynamic route, like [id].astro.
+
+### Static Routes
+
+Astro can pre-generate dynamic routes using the getStaticPaths() function. This approach is ideal when you know all the pages or products you want to serve, and they are limited.
+
+```astro
+---
+export async function getStaticPaths() {
+  // Static paths
+  return [
+    { params: { id: '1' } },
+    { params: { id: '2' } },
+    // More static paths
+  ];
+}
+---
+```
+
+### Dynamic Routes
+
+For pages that change frequently or are generated dynamically, you can map over a list of items to create routes:
+
+```astro
+---
+export async function getStaticPaths() {
+  const launches = await getLaunches();
+
+  return launches.map(launch => ({
+    params: { id: launch.id }
+  }));
+}
+---
+```
+
+### SSR (server-side rendering)
+
+For truly dynamic content that needs to be updated frequently, you can use SSR. In your astro.config.mjs, set the output property to 'server':
+
+```astro
+export default defineConfig({
+  integrations: [tailwind()],
+  output: 'server'
+});
+```
+
+#### Output Options
+
+- **Server**: renders on demand by default. Use this when most or all of your site should be server-rendered on request.
+- **Hybrid**: pre-renders to HTML by default. Use this when most of your site should be static. Individual pages or endpoints can opt out of pre-rendering using: `export const prerender = false;`.
+
+## View Transitions 🎥
+
+Astro supports view transitions, which you can implement using:
+
+```astro
+import { ViewTransitions } from "astro:transitions";
+```
+
+## Interactive Components (Islands)
+
+By default, components in Astro are static. To make them interactive, you need to specify a directive using `client`.
+
+### Client Directive
+
+The `client` directive tells Astro to load the component on the client-side only when it's needed. This helps reduce the initial JavaScript payload and improves performance.
+
+#### Options
+
+- `client:load`
+- `client:idle`
+- `client:visible`
+- `client:media`
+- `client:only`
+
+```astro
+<SomeComponent client:visible />
+```
+
+## Persistence of Information 💾
+
+When using `transition:persist`, Astro will persist information across navigations and animations. However, note that this doesn’t save data to localStorage, so the information will be lost if the page is refreshed.

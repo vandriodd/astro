@@ -1,4 +1,18 @@
 export type APISpaceXResponse = {
+  docs: Doc[];
+  totalDocs: number;
+  offset: number;
+  limit: number;
+  totalPages: number;
+  page: number;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  prevPage: null | number;
+  nextPage: null | number;
+};
+
+export type Doc = {
   fairings: Fairings | null;
   links: Links;
   static_fire_date_utc: Date | null;

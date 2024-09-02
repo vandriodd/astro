@@ -1,0 +1,40 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { getLaunchById, getLaunches } from '../../lib/spacex'
+const { id } = Astro.params
+
+// Only for server side
+// if (!id) {
+//   Astro.redirect("/")
+// }
+
+let launch = null
+if (id) {
+  launch = await getLaunchById(id)
+}
+
+export async function getStaticPaths() {
+  // Call to external API
+  // To know all the ids to generate the pages
+
+  // Dynamic paths
+  const launches = await getLaunches()
+
+  return launches.map((launch) => ({
+    params: {id: launch.id}
+  }))
+
+  // Static paths
+  // return [
+  //   {params: {id: ''}}
+  // ]
+}
+---
+
+<Layout title={`Launch ${id}`}>
+  <article class="flex gap-y-4 flex-col">
+    <img class="w-52 h-auto" src={launch?.links?.patch.small} alt={launch?.name} />
+    <h2 class="text-4xl text-white font-bold">Launch #{launch?.flight_number}</h2>
+    <p class="text-lg">{launch?.details}</p>
+  </article>
+</Layout>
